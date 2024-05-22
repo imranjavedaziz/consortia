@@ -68,74 +68,74 @@ const DashboardBottomComp = () => {
 
   // fetch data via api for practitioner listings
 
-  async function fetchPractitionerData() {
-    try {
-      const token = localStorage.getItem("access");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-      const response = await axios.get(
-        `${BASE_URL}/api/user_practitioners_list`,
-        {
-          headers,
-        }
-      );
-      setPractitionerData(response?.data?.results);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async function fetchPractitionerData() {
+  //   try {
+  //     const token = localStorage.getItem("access");
+  //     const headers = {
+  //       Authorization: `Bearer ${token}`,
+  //       "Content-Type": "application/json",
+  //     };
+  //     const response = await axios.get(
+  //       `${BASE_URL}/api/user_practitioners_list`,
+  //       {
+  //         headers,
+  //       }
+  //     );
+  //     setPractitionerData(response?.data?.results);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   // fetch data via api for property listings
-  async function fetchPropertyData() {
-    try {
-      const token = localStorage.getItem("access");
+  // async function fetchPropertyData() {
+  //   try {
+  //     const token = localStorage.getItem("access");
 
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-      const response = await axios.get(`${BASE_URL}/api/user_property_list`, {
-        headers,
-      });
-      setPropertyData(response.data.results);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  //     const headers = {
+  //       Authorization: `Bearer ${token}`,
+  //       "Content-Type": "application/json",
+  //     };
+  //     const response = await axios.get(`${BASE_URL}/api/user_property_list`, {
+  //       headers,
+  //     });
+  //     setPropertyData(response.data.results);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
-  useEffect(() => {
-    if (userRole === "Practitioner") {
-      fetchPractitionerData();
-    } else if (userRole === "Consumer") {
-      fetchPropertyData();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (userRole === "Practitioner") {
+  //     fetchPractitionerData();
+  //   } else if (userRole === "Consumer") {
+  //     fetchPropertyData();
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (userRole === "Practitioner") {
-      if (practitionerData.length !== 0) {
-        const updatedData = practitionerContent.map((item) => ({
-          ...item,
-          active: true,
-        }));
-        setData(updatedData);
-      } else {
-        setData(practitionerContent);
-      }
-    } else if (userRole === "Consumer") {
-      if (propertyData.length !== 0) {
-        const updatedData = consumerContent.map((item) => ({
-          ...item,
-          active: true,
-        }));
-        setData(updatedData);
-      } else {
-        setData(consumerContent);
-      }
-    }
-  }, [practitionerData, propertyData]);
+  // useEffect(() => {
+  //   if (userRole === "Practitioner") {
+  //     if (practitionerData.length !== 0) {
+  //       const updatedData = practitionerContent.map((item) => ({
+  //         ...item,
+  //         active: true,
+  //       }));
+  //       setData(updatedData);
+  //     } else {
+  //       setData(practitionerContent);
+  //     }
+  //   } else if (userRole === "Consumer") {
+  //     if (propertyData.length !== 0) {
+  //       const updatedData = consumerContent.map((item) => ({
+  //         ...item,
+  //         active: true,
+  //       }));
+  //       setData(updatedData);
+  //     } else {
+  //       setData(consumerContent);
+  //     }
+  //   }
+  // }, [practitionerData, propertyData]);
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-8">
