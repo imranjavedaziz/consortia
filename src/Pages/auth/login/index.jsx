@@ -46,7 +46,7 @@ const Login = () => {
       onSubmit: function (values, action) {
         setloading(true);
         if (
-          values.email === "consumer@gmail.com" ||
+          values.email === "consumer@gmail.com" &&
           values.password === "consumer123"
         ) {
           const payload = {
@@ -69,7 +69,7 @@ const Login = () => {
             toast.success("Welcome back!");
           }, 3000);
         } else if (
-          values.email === "practitioner@gmail.com" ||
+          values.email === "practitioner@gmail.com" &&
           values.password === "practitioner123"
         ) {
           const payload = {

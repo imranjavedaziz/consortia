@@ -33,8 +33,7 @@ const AuthProvider = ({ children }) => {
   }
 
   function handleLogout() {
-    localStorage.removeItem("access");
-    localStorage.removeItem("profile_info");
+    localStorage.clear();
     setNavigate(false);
   }
 
