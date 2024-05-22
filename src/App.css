@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+html {
+  overflow: hidden;
+}
+
+/* ----------custom scrollbar---------- */
+
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(24, 7, 88);
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: #343b76;
+}

@@ -1,0 +1,4 @@
+.custom-radio:checked {
+    background-color: green !important;
+    border-color: green !important;
+  }
