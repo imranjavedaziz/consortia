@@ -46,12 +46,9 @@ const Login = () => {
       onSubmit: function (values, action) {
         setloading(true);
         if (
-          values.email !== "consumer@gmail.com" ||
-          values.password !== "consumer123"
+          values.email === "consumer@gmail.com" ||
+          values.password === "consumer123"
         ) {
-          toast.error("Invalid Credentials");
-          return;
-        } else {
           const payload = {
             email: values.email,
             password: values.password,
@@ -61,6 +58,7 @@ const Login = () => {
             "access",
             JSON.stringify("df3jh5j3vtj45hk4j2hg4ec2jbr2rh248")
           );
+          localStorage.setItem("role", "Consumer");
 
           setTimeout(() => {
             action.resetForm();
@@ -70,6 +68,32 @@ const Login = () => {
             setRole("Consumer");
             toast.success("Welcome back!");
           }, 3000);
+        } else if (
+          values.email === "practitioner@gmail.com" ||
+          values.password === "practitioner123"
+        ) {
+          const payload = {
+            email: values.email,
+            password: values.password,
+          };
+          localStorage.setItem("profile_info", JSON.stringify(payload));
+          localStorage.setItem(
+            "access",
+            JSON.stringify("df3jh5j3vtj45hk4j2hg4ec2jbr2rh248")
+          );
+          localStorage.setItem("role", "Practitioner");
+          setTimeout(() => {
+            action.resetForm();
+            setloading(false);
+            navigateToDashboard("/dashboard/landing");
+            handleLogin("df3jh5j3vtj45hk4j2hg4ec2jbr2rh248");
+            setRole("Practitioner");
+            toast.success("Welcome back!");
+          }, 3000);
+        } else {
+          toast.error("Invalid Credentials");
+          setloading(false);
+          return;
         }
       },
     });

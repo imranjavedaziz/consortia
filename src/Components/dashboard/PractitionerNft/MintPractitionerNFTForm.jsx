@@ -36,34 +36,35 @@ function MintPractitionerNFTForm() {
   const [address, setAddress] = useState(() =>
     pendingNftData ? pendingNftData.address : ""
   );
-  const [isChecked, setIsChecked] = useState(false)
+  const [isChecked, setIsChecked] = useState(false);
   const [minPractitionerData, setMinPractitionerData] = useState({
     address: "",
-    agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-    bio: "description",
-    email: "settlement",
-    image: "",
-    licenseType: "",
-    license_number: [{ id: "", licenseNumber: "", sate: "" }],
-    name: "",
-    licenseNumber: "",
-    state: "",
+    // agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+    bio: "Here is the bio",
+    email: "practitioner@gmail.com",
+    image:
+      "https://blockprop.s3.amazonaws.com/17163996825831716335870803deal.png",
+    licenseType: "agent/broker",
+    // license_number: [{ id: "", licenseNumber: "", sate: "" }],
+    name: "John Doe",
+    licenseNumber: "GQ598450323598",
+    // state: "",
   });
 
-  useEffect(() => {
-    setMinPractitionerData({
-      address: selectedAddress,
-      agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-      bio: userData?.bio,
-      email: userData?.email,
-      image: userData?.headshot,
-      licenseType: userData?.practitionerType,
-      license_number: userData?.states,
-      name: `${userData?.firstName} ${userData?.lastName}`,
-      licenseNumber: selectedOption?.licenseNumber,
-      state: selectedOption?.state,
-    });
-  }, [userData, selectedAddress, selectedOption]);
+  // useEffect(() => {
+  //   setMinPractitionerData({
+  //     address: selectedAddress,
+  //     // agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+  //     bio: userData?.bio,
+  //     email: userData?.email,
+  //     image: userData?.headshot,
+  //     licenseType: userData?.practitionerType,
+  //     license_number: userData?.states,
+  //     name: `${userData?.firstName} ${userData?.lastName}`,
+  //     licenseNumber: selectedOption?.licenseNumber,
+  //     state: selectedOption?.state,
+  //   });
+  // }, [userData, selectedAddress, selectedOption]);
 
   console.log("MinPractitionerDaa", minPractitionerData);
 
@@ -74,135 +75,95 @@ function MintPractitionerNFTForm() {
     { value: "mortgage broker", label: "Mortgage Broker" },
     { value: "appraiser", label: "Appraiser" },
   ];
-  const getUserData = async () => {
-    try {
-      api.setJWT(getToken());
-      const res = await api.get(`${GET_PROFILE_BY_USERID + getId()}`);
-      if (res?.data?.data?.user?.stripe_user_block) {
-        toast.error("User has been blocked");
-      }
-      setUserData(res?.data?.data?.user);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getUserData();
-  }, []);
+  // const getUserData = async () => {
+  //   try {
+  //     api.setJWT(getToken());
+  //     const res = await api.get(`${GET_PROFILE_BY_USERID + getId()}`);
+  //     if (res?.data?.data?.user?.stripe_user_block) {
+  //       toast.error("User has been blocked");
+  //     }
+  //     setUserData(res?.data?.data?.user);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getUserData();
+  // }, []);
 
-  // Identity Verification Session
-  const [stripe, setStripe] = useState({});
-  const [liveStripe, setLiveStripe] = useState({});
+  // // Identity Verification Session
+  // const [stripe, setStripe] = useState({});
+  // const [liveStripe, setLiveStripe] = useState({});
 
-  const stripePromise = loadStripe(
-    process.env.REACT_APP_PUBLIC_STRIPE_PUBLISHABLE_KEY
-  );
+  // const stripePromise = loadStripe(
+  //   process.env.REACT_APP_PUBLIC_STRIPE_PUBLISHABLE_KEY
+  // );
 
-  const stripeLivePromise = loadStripe(
-    process.env.REACT_APP_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY
-  );
+  // const stripeLivePromise = loadStripe(
+  //   process.env.REACT_APP_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY
+  // );
 
-  const getStripe = async () => {
-    setStripe(await stripePromise);
-  };
+  // const getStripe = async () => {
+  //   setStripe(await stripePromise);
+  // };
 
-  const getLiveStripe = async () => {
-    setLiveStripe(await stripeLivePromise);
-  };
+  // const getLiveStripe = async () => {
+  //   setLiveStripe(await stripeLivePromise);
+  // };
 
-  useEffect(() => {
-    getStripe();
-    !!process.env.REACT_APP_PUBLIC_IS_LIVE_STRIPE && getLiveStripe();
-  }, []);
+  // useEffect(() => {
+  //   getStripe();
+  //   !!process.env.REACT_APP_PUBLIC_IS_LIVE_STRIPE && getLiveStripe();
+  // }, []);
 
   // handling form with formik & yup
   async function handleSubmit(event) {
     event.preventDefault();
-    try {
-      if (!minPractitionerData.address) {
-        toast.error("Please select the address from dropdown list!");
-        return;
-      }
-      if (!minPractitionerData.licenseNumber) {
-        toast.error("Please select the license number.");
-        return;
-      }
-      if(!isChecked) {
-        toast.error("Please read and accept the Terms and Conditions");
-        return;
-      }
-
-      setLoading(true);
-
-      apinew.setJWT(getToken());
-      const res = pendingNftData
-        ? await apinew.put(
-            `/api/practitioner_nft/${pendingNftData.id}`,
-            minPractitionerData
-          )
-        : await apinew.post(
-            "/api/create_practitioner_nft",
-            minPractitionerData
-          );
-
-      if (res?.status >= 200 && res?.status < 400) {
-        // Creating Identity Verification session again
-        if (res?.data?.data.client_secret) {
-          const { error } = await (process.env
-            .REACT_APP_PUBLIC_IS_LIVE_STRIPE == "true"
-            ? liveStripe
-            : stripe
-          ).verifyIdentity(res?.data?.data.client_secret);
-          if (error) {
-            toast.error("Identity Verification went wrong!", {
-              duration: 4000,
-            });
-            console.log("[error]", error);
-            setLoading(false);
-          } else {
-            navigate("/nftWallet/NftWallet");
-          }
-
-          return;
-        }
-
-        // For Edititng NFT. If payment is successful then navigate.
-        pendingNftData?.payment_intent_id && navigate("/nftWallet/NftWallet");
-        setLoading(false);
-        setShowPaymentCard(true);
-        setData({
-          id: pendingNftData?.id ? pendingNftData?.id : res?.data?.data?.id,
-        });
-      }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
+    if (!minPractitionerData.address) {
+      toast.error("Please select the address from dropdown list!");
+      return;
     }
+    if (!isChecked) {
+      toast.error("Please read and accept the Terms and Conditions");
+      return;
+    }
+    setLoading(true);
+    console.log(minPractitionerData);
+    const isPrev = localStorage.getItem("practNft");
+    if (isPrev) {
+      let deta = JSON.parse(isPrev);
+      deta = [...deta, minPractitionerData];
+      localStorage.setItem("practNft", JSON.stringify(deta));
+    } else {
+      localStorage.setItem("practNft", JSON.stringify([minPractitionerData]));
+    }
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/nftWallet/NftWallet");
+    }, 3000);
   }
-
 
   const [terms, setTerms] = useState(false);
   const [check, setCheck] = useState(false);
- 
+
   const handleTerms = () => {
     setTerms(true);
-    setCheck(true)
-    
+    setCheck(true);
   };
 
-  const handleChecked =(e)=> {
-    setIsChecked(e.target.checked)
-    console.log(e.target.checked)
-  }
-  const handleCheckbox =()=> {
-    if(!check) {
-      toast.error('please read the Terms & Conditions')
+  const handleChecked = (e) => {
+    setIsChecked(e.target.checked);
+    console.log(e.target.checked);
+  };
+  const handleCheckbox = () => {
+    if (!check) {
+      toast.error("please read the Terms & Conditions");
     }
-  }
+  };
 
   return (
     <>
-    {terms && <Term setTerms={setTerms} />}
+      {terms && <Term setTerms={setTerms} />}
       {showPaymentCard && (
         <PaymentPopup
           isPractitionerNFT={true}
@@ -242,20 +203,37 @@ function MintPractitionerNFTForm() {
                 inputValue={minPractitionerData.email}
               />
 
-              <AutocompleteAddress
+              {/* <AutocompleteAddress
                 selectedAddress={selectedAddress}
                 setSelectedAddress={setSelectedAddress}
                 address={address}
                 setAddress={setAddress}
-              />
+              /> */}
+              <label className="text-label-md heading-3 sm:text-[1.2375em] text-white">
+                Address
+              </label>
+              <div className="bg-gradient-to-r from-[#1D2CDF] to-[#B731FF] p-0.5 rounded-[24px]">
+                <input
+                  className={`w-full text-white px-4 bg-dark-blue border-0 py-2.5 rounded-[24px] placeholder:font-medium focus:outline-none text-[13px]`}
+                  autoComplete="off"
+                  placeholder="Enter address"
+                  type="search"
+                  name="address"
+                  inputValue={minPractitionerData.address}
+                  onChange={(e) =>
+                    setMinPractitionerData((prev) => ({
+                      ...prev,
+                      address: e.target.value,
+                    }))
+                  }
+                />
+              </div>
 
               <CustomFileUpload
                 labelName="Upload a Profile Photo:"
                 grayText="Files types supported: JPG/PNG (Max Size: 5MB)"
                 formId={7}
-                imageUrl={
-                  !profilePhoto ? minPractitionerData.image : profilePhoto
-                }
+                imageUrl={minPractitionerData.image}
                 setImageUrl={setProfilePhoto}
                 maxFileSize={5}
                 disabled={true}
@@ -276,7 +254,7 @@ function MintPractitionerNFTForm() {
                 <div className="mt-5 space-y-3 grid grid-cols-1 sm:grid-cols-2">
                   {licenseType.map(({ label, value }, i) => {
                     return (
-                      <div className="flex items-center">
+                      <div type={i} className="flex items-center">
                         <input
                           key={i}
                           type="radio"
@@ -302,7 +280,7 @@ function MintPractitionerNFTForm() {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <div className="text-label-xs sm:text-label-sm xl:text-label-lg ">
                   License Number:
                 </div>
@@ -325,12 +303,12 @@ function MintPractitionerNFTForm() {
                     </label>
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               <br />
 
               <div className="flex justify-between">
-              <div class="flex items-center">
+                <div class="flex items-center">
                   <input
                     id="link-checkbox"
                     type="checkbox"
@@ -343,16 +321,15 @@ function MintPractitionerNFTForm() {
                     for="link-checkbox"
                     className="ml-2 cursor-pointer flex text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Click to accept{" "} <p
-                    onClick={handleTerms}
-                    className="underline ms-2 text-xs  sm:text-sm cursor-pointer"
-                  >
-                    Terms & Conditions
-                  </p>
+                    Click to accept{" "}
+                    <p
+                      onClick={handleTerms}
+                      className="underline ms-2 text-xs  sm:text-sm cursor-pointer"
+                    >
+                      Terms & Conditions
+                    </p>
                   </label>
                 </div>
-
-                
               </div>
 
               <CustomButton

@@ -225,7 +225,6 @@ const MintPropertyNFTForm = () => {
 
     setLoading(true);
 
-    setLoading(false);
     const isPrev = localStorage.getItem("mintnftdata");
     if (isPrev) {
       let deta = JSON.parse(isPrev);
@@ -235,6 +234,7 @@ const MintPropertyNFTForm = () => {
       localStorage.setItem("mintnftdata", JSON.stringify([minPropertyData]));
     }
     setTimeout(() => {
+      setLoading(false);
       navigate("/nftWallet/NftWallet");
     }, 3000);
     // const data = {

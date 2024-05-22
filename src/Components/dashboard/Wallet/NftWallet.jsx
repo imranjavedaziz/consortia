@@ -117,6 +117,14 @@ function NftWallet() {
       setPropertyData(data);
     }
   };
+  const fetchPractitionerData = () => {
+    const data = JSON.parse(localStorage.getItem("practNft"));
+    console.log(data);
+
+    if (data) {
+      setPractitionerData(data);
+    }
+  };
 
   // useEffect(() => {
   //   // Check if any object in propertyData has is_minted === true
@@ -175,9 +183,9 @@ function NftWallet() {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     setWalletAddress("43h545g34538743rg347");
     fetchPropertyData();
-    // if (userRole === "Practitioner") {
-    //   fetchPractitionerData();
-    // }
+    if (userRole === "Practitioner") {
+      fetchPractitionerData();
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -241,7 +249,6 @@ function NftWallet() {
                 </div>
                 {/* cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-12 sm:mt-24">
-                  {console.log(propertyData)}
                   {propertyData &&
                     propertyData?.map((item, ind) => (
                       <>

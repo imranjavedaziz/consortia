@@ -39,41 +39,41 @@ const AuthProvider = ({ children }) => {
   }
 
   // Get Login User Data
-  useEffect(() => {
-    // Create an instance of Axios
-    const axiosInstance = axios.create({
-      baseURL: BASE_URL, // Replace with your API base URL
-    });
+  // useEffect(() => {
+  //   // Create an instance of Axios
+  //   const axiosInstance = axios.create({
+  //     baseURL: BASE_URL, // Replace with your API base URL
+  //   });
 
-    // Add an interceptor to include the JWT token in the request headers
-    axiosInstance.interceptors.request.use(
-      (config) => {
-        config.headers.Authorization = `Bearer ${getToken()}`;
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-    // Make a request using the axiosInstance
-    axiosInstance
-      .get(GET_PROFILE_BY_USERID + getId())
-      .then((response) => {
-        setProfileDetail(response?.data?.data?.user);
-        setHeadshot(response?.data?.data?.user?.headshot);
-        setVideoPopup(profileDetail?.isWatched);
-        setEmail(profileDetail.email);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    // eslint-disable-next-line
-  }, [isLoggedIn, dataResync, videoPopup]);
+  //   // Add an interceptor to include the JWT token in the request headers
+  //   axiosInstance.interceptors.request.use(
+  //     (config) => {
+  //       config.headers.Authorization = `Bearer ${getToken()}`;
+  //       return config;
+  //     },
+  //     (error) => {
+  //       return Promise.reject(error);
+  //     }
+  //   );
+  //   // Make a request using the axiosInstance
+  //   axiosInstance
+  //     .get(GET_PROFILE_BY_USERID + getId())
+  //     .then((response) => {
+  //       setProfileDetail(response?.data?.data?.user);
+  //       setHeadshot(response?.data?.data?.user?.headshot);
+  //       setVideoPopup(profileDetail?.isWatched);
+  //       setEmail(profileDetail.email);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  //   // eslint-disable-next-line
+  // }, [isLoggedIn, dataResync, videoPopup]);
 
   // var userRole = JSON.parse(localStorage.getItem("profile_info"));
   // userRole = userRole?.user?.role;
-  let userRole = "Consumer";
-
+  let userRole = localStorage.getItem("role");
+  console.log(userRole);
   return (
     <AuthContext.Provider
       value={{
